@@ -1927,6 +1927,83 @@ template IMPLOT_API void PlotPieChart<float>(const char* const label_ids[], cons
 template IMPLOT_API void PlotPieChart<double>(const char* const label_ids[], const double* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
 
 //-----------------------------------------------------------------------------
+// PLOT PIE CHART
+//-----------------------------------------------------------------------------
+
+IMPLOT_INLINE void RenderRingSlice(ImDrawList& DrawList, const ImPlotPoint& center, double inner_radius, double radius, double a0, double a1, ImU32 col) {
+    static const float resolution = 50 / (2 * IM_PI);
+    int n = ImMax(3, (int)((a1 - a0) * resolution));
+    DrawList.PathArcTo(PlotToPixels(center, IMPLOT_AUTO, IMPLOT_AUTO), radius, a0 * 0.95f, a1, n);
+    DrawList.PathArcTo(PlotToPixels(center, IMPLOT_AUTO, IMPLOT_AUTO), inner_radius, a1, a0 * 0.95f, n);
+    DrawList.PathFill(col);
+}
+
+template <typename T>
+void PlotRingChart(const char* const label_ids[], const T* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0) {
+    IM_ASSERT_USER_ERROR(GImPlot->CurrentPlot != NULL, "PlotRingChart() needs to be called between BeginPlot() and EndPlot()!");
+    ImDrawList & DrawList = *GetPlotDrawList();
+    double sum = 0;
+    for (int i = 0; i < count; ++i)
+        sum += (double)values[i];
+    normalize = normalize || sum > 1.0;
+    ImPlotPoint center(x,y);
+    PushPlotClipRect();
+    double a0 = angle0 * 2 * IM_PI / 360.0;
+    double a1 = angle0 * 2 * IM_PI / 360.0;
+    for (int i = 0; i < count; ++i) {
+        double percent = normalize ? (double)values[i] / sum : (double)values[i];
+        a1 = a0 + 2 * IM_PI * percent;
+        if (BeginItem(label_ids[i])) {
+            if (FitThisFrame()) {
+                FitPoint(ImPlotPoint(x-radius,y-radius));
+                FitPoint(ImPlotPoint(x+radius,y+radius));
+            }
+            ImU32 col = GetCurrentItem()->Color;
+            if (percent < 0.5) {
+                RenderRingSlice(DrawList, center, inner_radius, radius, a0, a1, col);
+            }
+            else  {
+                RenderRingSlice(DrawList, center, inner_radius, radius, a0, a0 + (a1 - a0) * 0.5, col);
+                RenderRingSlice(DrawList, center, inner_radius, radius, a0 + (a1 - a0) * 0.5, a1, col);
+            }
+            EndItem();
+        }
+        a0 = a1;
+    }
+    if (fmt != NULL) {
+        a0 = angle0 * 2 * IM_PI / 360.0;
+        a1 = angle0 * 2 * IM_PI / 360.0;
+        char buffer[32];
+        for (int i = 0; i < count; ++i) {
+            ImPlotItem* item = GetItem(label_ids[i]);
+            double percent = normalize ? (double)values[i] / sum : (double)values[i];
+            a1 = a0 + 2 * IM_PI * percent;
+            if (item->Show) {
+                ImFormatString(buffer, 32, fmt, (double)values[i]);
+                ImVec2 size = ImGui::CalcTextSize(buffer);
+                double angle = a0 + (a1 - a0) * 0.5;
+                ImVec2 pos = PlotToPixels(center.x + 0.5 * radius * cos(angle), center.y + 0.5 * radius * sin(angle),IMPLOT_AUTO,IMPLOT_AUTO);
+                ImU32 col  = CalcTextColor(ImGui::ColorConvertU32ToFloat4(item->Color));
+                DrawList.AddText(pos - size * 0.5f, col, buffer);
+            }
+            a0 = a1;
+        }
+    }
+    PopPlotClipRect();
+}
+
+template IMPLOT_API void PlotRingChart<ImS8>(const char* const label_ids[], const ImS8* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU8>(const char* const label_ids[], const ImU8* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS16>(const char* const label_ids[], const ImS16* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU16>(const char* const label_ids[], const ImU16* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS32>(const char* const label_ids[], const ImS32* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU32>(const char* const label_ids[], const ImU32* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS64>(const char* const label_ids[], const ImS64* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU64>(const char* const label_ids[], const ImU64* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<float>(const char* const label_ids[], const float* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<double>(const char* const label_ids[], const double* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+
+//-----------------------------------------------------------------------------
 // PLOT HEATMAP
 //-----------------------------------------------------------------------------
 

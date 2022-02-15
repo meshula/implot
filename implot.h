@@ -742,6 +742,9 @@ IMPLOT_TMP void PlotHLines(const char* label_id, const T* ys, int count, int off
 // Plots a pie chart. If the sum of values > 1 or normalize is true, each value will be normalized. Center and radius are in plot units. #label_fmt can be set to NULL for no labels.
 IMPLOT_TMP void PlotPieChart(const char* const label_ids[], const T* values, int count, double x, double y, double radius, bool normalize=false, const char* label_fmt="%.1f", double angle0=90);
 
+// Plots a ring chart, like a pie, but with an inner radius
+IMPLOT_TMP void PlotRingChart(const char* const label_ids[], const T* values, int count, double x, double y, double inner_radius, double radius, bool normalize=false, const char* label_fmt="%.1f", double angle0=90);
+
 // Plots a 2D heatmap chart. Values are expected to be in row-major order. Leave #scale_min and scale_max both at 0 for automatic color scaling, or set them to a predefined range. #label_fmt can be set to NULL for no labels.
 IMPLOT_TMP void PlotHeatmap(const char* label_id, const T* values, int rows, int cols, double scale_min=0, double scale_max=0, const char* label_fmt="%.1f", const ImPlotPoint& bounds_min=ImPlotPoint(0,0), const ImPlotPoint& bounds_max=ImPlotPoint(1,1));
 
