@@ -1935,7 +1935,7 @@ IMPLOT_INLINE void RenderRingSlice(ImDrawList& DrawList, const ImPlotPoint& cent
     int n = ImMax(3, (int)((a1 - a0) * resolution));
     DrawList.PathArcTo(PlotToPixels(center, IMPLOT_AUTO, IMPLOT_AUTO), radius, a0 * 0.95f, a1, n);
     DrawList.PathArcTo(PlotToPixels(center, IMPLOT_AUTO, IMPLOT_AUTO), inner_radius, a1, a0 * 0.95f, n);
-    DrawList.PathFill(col);
+    DrawList.PathFillConvex(col);
 }
 
 template <typename T>
@@ -1992,16 +1992,16 @@ void PlotRingChart(const char* const label_ids[], const T* values, int count, do
     PopPlotClipRect();
 }
 
-template IMPLOT_API void PlotRingChart<ImS8>(const char* const label_ids[], const ImS8* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImU8>(const char* const label_ids[], const ImU8* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImS16>(const char* const label_ids[], const ImS16* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImU16>(const char* const label_ids[], const ImU16* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImS32>(const char* const label_ids[], const ImS32* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImU32>(const char* const label_ids[], const ImU32* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImS64>(const char* const label_ids[], const ImS64* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<ImU64>(const char* const label_ids[], const ImU64* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<float>(const char* const label_ids[], const float* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
-template IMPLOT_API void PlotRingChart<double>(const char* const label_ids[], const double* values, int count, double x, double y, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS8>(const char* const label_ids[], const ImS8* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU8>(const char* const label_ids[], const ImU8* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS16>(const char* const label_ids[], const ImS16* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU16>(const char* const label_ids[], const ImU16* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS32>(const char* const label_ids[], const ImS32* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU32>(const char* const label_ids[], const ImU32* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImS64>(const char* const label_ids[], const ImS64* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<ImU64>(const char* const label_ids[], const ImU64* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<float>(const char* const label_ids[], const float* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
+template IMPLOT_API void PlotRingChart<double>(const char* const label_ids[], const double* values, int count, double x, double y, double inner_radius, double radius, bool normalize, const char* fmt, double angle0);
 
 //-----------------------------------------------------------------------------
 // PLOT HEATMAP
